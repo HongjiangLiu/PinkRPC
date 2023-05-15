@@ -5,6 +5,7 @@ import (
 	"encoding/gob"
 	"encoding/json"
 	"fmt"
+	"runtime"
 	"testing"
 )
 
@@ -30,15 +31,35 @@ var (
 	}
 )
 
-func TestPob(t *testing.T) {
+func PobEncoder() bytes.Buffer {
 	var buf bytes.Buffer
 	enc := gob.NewEncoder(&buf)
 	_ = enc.Encode(PersonB)
-	fmt.Printf("gob length %d\n", buf.Len())
-	var person Person
-	dec := gob.NewDecoder(&buf)
+	return buf
+}
+
+func PobDecoder(buf *bytes.Buffer) (person Person) {
+	dec := gob.NewDecoder(buf)
 	_ = dec.Decode(&person)
-	fmt.Printf("gob result %v\n", person)
+	return person
+}
+
+func JsonEncoder() []byte {
+	js, _ := json.Marshal(PersonB)
+	return js
+}
+
+func JsonDecoder(buf []byte) (person Person) {
+	_ = json.Unmarshal(buf, &person)
+	return
+}
+
+func TestPob(t *testing.T) {
+	var m1, m2 runtime.MemStats
+	runtime.ReadMemStats(&m1)
+	_ = PobEncoder()
+	runtime.ReadMemStats(&m2)
+	fmt.Printf("gob memory %d\n", m2.Alloc-m1.Alloc)
 }
 
 func TestJson(t *testing.T) {
