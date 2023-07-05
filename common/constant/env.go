@@ -1,0 +1,8 @@
+package constant
+
+// TODO 这些常量是做什么的？
+const (
+	CONF_CONSUMER_FILE_PATH        = "CONF_CONSUMER_FILE_PATH"
+	CONF_PROVIDER_FILE_PATH        = "CONF_PROVIDER_FILE_PATH"
+	APP_LOG_CONF_FILE       string = "APP_LOG_CONF_FILE"
+)
